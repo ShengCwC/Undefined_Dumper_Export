@@ -32,6 +32,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Export-Dumper.ps1
 
 ## 行为和边界
 
+- Dumper 的公开资源统一放在 `cdn.screenshare.cn/dumper-export/` 下；域名根路径不绑定或跳转到导出脚本，其他用途可以使用各自的路径。
 - 脚本自动下载固定版本的独立导出组件，校验脚本中固定的 SHA-256 后启动。组件缓存在 `%LOCALAPPDATA%\UndefinedStringDumper\Exporter\1.0.0`，以后运行仍检查哈希；不依赖本机 Dumper 安装。
 - 公开 CDN 只分发脚本和程序。恢复凭证通过进程标准输入传递，仅在官方 `https://www.screenshare.cn/api/dumper/archives/` 请求的 Authorization 头中使用；不会进入 GitHub、CDN 下载请求、URL、命令行或凭证文件。
 - 数据接口已使用主站的 EdgeOne 线路。导出在本机逐片解密，保留归档原始内容、UTF-8/BOM 和 HWID；不会重新扫描本机进程。
