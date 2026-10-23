@@ -70,6 +70,7 @@ param(
         if ($ChosenPath -match "[`r`n]") { throw 'Output path must be a single line.' }
         $pointer = [IntPtr]::Zero
         $process = $null
+        $inputBytes = $null
         try {
             $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
             $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
@@ -78,16 +79,19 @@ param(
             $start.FileName = $executable
             $start.UseShellExecute = $false
             $start.RedirectStandardInput = $true
-            $start.StandardInputEncoding = New-Object Text.UTF8Encoding($false)
             $process = [Diagnostics.Process]::Start($start)
-            $process.StandardInput.WriteLine($plain)
+            # .NET Framework (Windows PowerShell 5.1) has no StandardInputEncoding property.
+            $inputBytes = [Text.Encoding]::UTF8.GetBytes($plain + "`n" + $ChosenPath + "`n")
             $plain = $null
-            $process.StandardInput.WriteLine($ChosenPath)
+            $process.StandardInput.BaseStream.Write($inputBytes, 0, $inputBytes.Length)
+            $process.StandardInput.BaseStream.Flush()
+            [Array]::Clear($inputBytes, 0, $inputBytes.Length)
             $process.StandardInput.Close()
             while (-not $process.WaitForExit(200)) { }
             if ($process.ExitCode -ne 0) { throw "Export failed (exit code $($process.ExitCode)). See the message above." }
         } finally {
             $plain = $null
+            if ($null -ne $inputBytes) { [Array]::Clear($inputBytes, 0, $inputBytes.Length) }
             if ($pointer -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
             if ($null -ne $secret) { $secret.Dispose() }
             if ($null -ne $process) { $process.Dispose() }

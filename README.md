@@ -17,13 +17,13 @@ irm https://cdn.screenshare.cn/dumper-export/Export-Dumper.ps1 | iex
 GitHub 备用入口：
 
 ```powershell
-irm https://raw.githubusercontent.com/ShengCwC/Undefined_Dumper_Export/v1.0.0/Export-Dumper.ps1 | iex
+irm https://raw.githubusercontent.com/ShengCwC/Undefined_Dumper_Export/v1.0.1/Export-Dumper.ps1 | iex
 ```
 
 下载后查看脚本再运行：
 
 ```powershell
-Invoke-WebRequest -UseBasicParsing https://cdn.screenshare.cn/dumper-export/v1.0.0/Export-Dumper.ps1 -OutFile Export-Dumper.ps1
+Invoke-WebRequest -UseBasicParsing https://cdn.screenshare.cn/dumper-export/v1.0.1/Export-Dumper.ps1 -OutFile Export-Dumper.ps1
 notepad .\Export-Dumper.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Export-Dumper.ps1
 ```
@@ -39,7 +39,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Export-Dumper.ps1
 - 默认绝不覆盖已有文件。正常失败或取消会删除本次临时文件；断电或强制结束进程可能留下 `.partial`，应由用户在确认导出未运行后删除。导出内容可能包含敏感字符串，请选择受控的本机路径。
 - 临时网络故障、408/429/5xx 最多重试 4 次，遵守 Retry-After，每次请求最多 3 分钟。失败后重新运行会从头导出；此版本没有跨进程断点恢复。
 - 恢复凭证仍按后台的 1 小时有效期和实时权限校验执行。过期、撤销、账号停用或失去归档权限后需要重新处理授权；脚本不会绕过这些限制。
-- `-GitHubOnly` 使用 GitHub 下载组件；`-DownloadOnly` 仅下载并校验组件、返回本机路径；`-OutputPath` 可指定目标路径。远程执行入口可接受脚本作者的更新；需要固定版本时使用带 `v1.0.0` 的地址。
+- `-GitHubOnly` 使用 GitHub 下载组件；`-DownloadOnly` 仅下载并校验组件、返回本机路径；`-OutputPath` 可指定目标路径。远程执行入口可接受脚本作者的更新；需要固定版本时使用带版本号的地址。
 
 ## 构建与验证
 
